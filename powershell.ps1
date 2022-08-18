@@ -274,10 +274,17 @@ try {
 }
 catch [PSRule.Pipeline.RuleException] {
     Write-Host "::error::Rule exception: $($_.Exception.Message)";
+    Write-Host "$($_.Exception.ScriptStackTrace)";
+    $Host.SetShouldExit(1);
+}
+catch [PSRule.Pipeline.FailPipelineException] {
+    Write-Host "::error::One or more assertions failed. $($_.Exception.Message)";
+    Write-Host "$($_.Exception.ScriptStackTrace)";
     $Host.SetShouldExit(1);
 }
 catch {
-    Write-Host "::error::One or more assertions failed.";
+    Write-Host "::error::$($_.Exception.Message)";
+    Write-Host "$($_.Exception.ScriptStackTrace)";
     $Host.SetShouldExit(1);
 }
 finally {
